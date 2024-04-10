@@ -4,6 +4,6 @@
 
     <endpoint
             name="employeeService"
-            implementation="com.soap_hrm.presentation.controller.EmployeeService"
+            implementation="com.soap_hrm.presentation.controller.EmployeeController"
             url-pattern="/ws/employee" />
 </endpoints>

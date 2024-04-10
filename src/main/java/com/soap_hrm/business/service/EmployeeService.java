@@ -54,27 +54,27 @@ public class EmployeeService {
                 .toList();
     }
 
-    public String createEmployee(EmployeeRequest employeeRequest) {
+    public EmployeeDto createEmployee(EmployeeRequest employeeRequest) {
         String result = isEmployeeRequestValid(employeeRequest);
         if (!result.isEmpty()) {
-            return result;
+            return null;
         } else {
 
             Job job = getJobById(employeeRequest.getJobID());
             if (job == null) {
-                return "there is no job with this id";
+                return null;
             }
 
             Salary salary = getOrCreateNewSalary(employeeRequest.getSalary());
 
             Department department = getDepartmentById(employeeRequest.getDepartmentID());
             if (department == null) {
-                return "there is no department with this id";
+                return null;
             }
 
             Address address = getAddressByID(employeeRequest.getAddressID());
             if (address == null) {
-                return "there is no address with this id";
+                return null;
             }
             Employee newEmployee = new Employee();
             newEmployee.setEmpName(employeeRequest.getEmpName());
@@ -87,10 +87,10 @@ public class EmployeeService {
             newEmployee.setAddress(address);
             newEmployee.setAnnualHolidays(employeeRequest.getAnnualHolidays());
 
-            employeeRepo.save(newEmployee);
+            newEmployee = employeeRepo.save(newEmployee);
+            return EmployeeMapper.getInstance().mapEntityToDto(newEmployee, EmployeeDto.class);
         }
 
-        return "";
     }
 
     private Address getAddressByID(int addressId) {
