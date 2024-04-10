@@ -26,4 +26,9 @@
             name="addressService"
             implementation="com.soap_hrm.presentation.controller.AddressController"
             url-pattern="/ws/address" />
+
+    <endpoint
+            name="timeEntryService"
+            implementation="com.soap_hrm.presentation.controller.TimeEntryController"
+            url-pattern="/ws/timeEntry" />
 </endpoints>
