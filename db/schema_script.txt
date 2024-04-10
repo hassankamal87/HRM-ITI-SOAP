@@ -1,0 +1,86 @@
+CREATE DATABASE hr_db;
+
+USE hr_db;
+
+CREATE TABLE `job` (
+  `jobID` int NOT NULL AUTO_INCREMENT,
+  `jobTitle` varchar(30) NOT NULL,
+  PRIMARY KEY (`jobID`),
+  UNIQUE KEY `jobID_UNIQUE` (`jobID`),
+  UNIQUE KEY `jobTitle_UNIQUE` (`jobTitle`)
+);
+
+CREATE TABLE `hr_db`.`address` (
+  `addressID` INT NOT NULL AUTO_INCREMENT,
+  `country` VARCHAR(25) NOT NULL,
+  `city` VARCHAR(25) NOT NULL,
+  `streetName` VARCHAR(45) NULL,
+  PRIMARY KEY (`addressID`),
+  UNIQUE INDEX `addressID_UNIQUE` (`addressID` ASC) VISIBLE);
+  
+  CREATE TABLE `hr_db`.`salary` (
+  `salaryID` INT NOT NULL AUTO_INCREMENT,
+  `amount` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`salaryID`),
+  UNIQUE INDEX `salaryID_UNIQUE` (`salaryID` ASC) VISIBLE);
+  
+CREATE TABLE `department` (
+  `depID` int NOT NULL AUTO_INCREMENT,
+  `depName` varchar(45) NOT NULL,
+  `depMGR` int NOT NULL,
+  PRIMARY KEY (`depID`),
+  UNIQUE KEY `depID_UNIQUE` (`depID`),
+  KEY `depMGR_idx` (`depMGR`),
+  CONSTRAINT `depMGR` FOREIGN KEY (`depMGR`) REFERENCES `employee` (`empID`)
+);
+  
+  
+  CREATE TABLE `employee` (
+  `empID` int NOT NULL AUTO_INCREMENT,
+  `empName` varchar(60) NOT NULL,
+  `empEmail` varchar(30) NOT NULL,
+  `jobID` int NOT NULL,
+  `salaryID` int NOT NULL,
+  `hireDate` date NOT NULL,
+  `endDate` date DEFAULT NULL,
+  `depID` int DEFAULT NULL,
+  `addressID` int NOT NULL,
+  PRIMARY KEY (`empID`),
+  UNIQUE KEY `empID_UNIQUE` (`empID`),
+  UNIQUE KEY `empEmail_UNIQUE` (`empEmail`),
+  KEY `jobID_idx` (`jobID`),
+  KEY `salaryID_idx` (`salaryID`),
+  KEY `depID_idx` (`depID`),
+  KEY `addressID_idx` (`addressID`),
+  CONSTRAINT `addressID` FOREIGN KEY (`addressID`) REFERENCES `address` (`addressID`),
+  CONSTRAINT `depID` FOREIGN KEY (`depID`) REFERENCES `department` (`depID`),
+  CONSTRAINT `jobID` FOREIGN KEY (`jobID`) REFERENCES `job` (`jobID`),
+  CONSTRAINT `salaryID` FOREIGN KEY (`salaryID`) REFERENCES `salary` (`salaryID`)
+); 
+
+CREATE TABLE `hr_db`.`timeentries` (
+  `entryID` INT NOT NULL AUTO_INCREMENT,
+  `empID` INT NOT NULL,
+  `entryDate` DATE NOT NULL,
+  `timeIn` TIME NULL,
+  `timeOut` TIME NULL,
+  PRIMARY KEY (`entryID`),
+  UNIQUE INDEX `entryID_UNIQUE` (`entryID` ASC) VISIBLE,
+  INDEX `empID_idx` (`empID` ASC) VISIBLE,
+  CONSTRAINT `empID`
+    FOREIGN KEY (`empID`)
+    REFERENCES `hr_db`.`employee` (`empID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    );
+
+CREATE TABLE `holiday` (
+  `holidayID` int NOT NULL AUTO_INCREMENT,
+  `employeeID` int NOT NULL,
+  `holidyaDate` date NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`holidayID`),
+  UNIQUE KEY `holidayID_UNIQUE` (`holidayID`),
+  KEY `empID_idx` (`employeeID`),
+  CONSTRAINT `employeeID` FOREIGN KEY (`employeeID`) REFERENCES `employee` (`empID`)
+);
