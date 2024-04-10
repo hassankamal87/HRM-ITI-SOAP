@@ -6,6 +6,7 @@ import com.soap_hrm.persistence.connection.JPAManager;
 import com.soap_hrm.persistence.entities.Address;
 import com.soap_hrm.persistence.repo.AddressRepo;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class AddressService {
         return null;
     }
 
-    public AddressDto createAddress(AddressDto addressDto){
+    public AddressDto createAddress(AddressDto addressDto) {
         String result = isAddressDtoValid(addressDto);
         if (!result.isEmpty())
             return null;
@@ -43,9 +44,13 @@ public class AddressService {
         newAddress.setCountry(addressDto.getCountry());
         newAddress.setStreetName(addressDto.getStreetName());
 
-        newAddress  = addressRepo.save(newAddress);
-        addressDto.setId(newAddress.getId());
-        return addressDto;
+        try {
+            newAddress = addressRepo.save(newAddress);
+            addressDto.setId(newAddress.getId());
+            return addressDto;
+        }catch (PersistenceException e){
+            return null;
+        }
     }
 
     private String isAddressDtoValid(AddressDto addressDto) {
@@ -58,12 +63,12 @@ public class AddressService {
         return "";
     }
 
-    public String deleteAddressById(int id){
+    public boolean deleteAddressById(int id) {
         try {
             addressRepo.deleteById(Address.class, id);
-            return "";
-        }catch (RuntimeException exception){
-            return "can't delete this address";
+            return true;
+        } catch (RuntimeException exception) {
+            return false;
         }
     }
 }

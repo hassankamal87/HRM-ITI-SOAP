@@ -21,4 +21,9 @@
             name="holidayService"
             implementation="com.soap_hrm.presentation.controller.HolidayController"
             url-pattern="/ws/holiday" />
+
+    <endpoint
+            name="addressService"
+            implementation="com.soap_hrm.presentation.controller.AddressController"
+            url-pattern="/ws/address" />
 </endpoints>
