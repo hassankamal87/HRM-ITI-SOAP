@@ -6,6 +6,7 @@ import com.soap_hrm.persistence.connection.JPAManager;
 import com.soap_hrm.persistence.entities.Job;
 import com.soap_hrm.persistence.repo.JobRepo;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
 
 import java.util.List;
 
@@ -39,12 +40,21 @@ public class JobService {
             return null;
         Job newJob = new Job();
         newJob.setJobTitle(jobDto.getJobTitle());
-        newJob = jobRepo.save(newJob);
-        jobDto.setId(newJob.getId());
-        return jobDto;
+        try {
+            newJob = jobRepo.save(newJob);
+            jobDto.setId(newJob.getId());
+            return jobDto;
+        } catch (PersistenceException e) {
+            return null;
+        }
     }
 
-    public void deleteJobById(int id){
-        jobRepo.deleteById(Job.class, id);
+    public boolean deleteJobById(int id) {
+        try {
+            jobRepo.deleteById(Job.class, id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 }

@@ -6,4 +6,19 @@
             name="employeeService"
             implementation="com.soap_hrm.presentation.controller.EmployeeController"
             url-pattern="/ws/employee" />
+
+    <endpoint
+            name="departmentService"
+            implementation="com.soap_hrm.presentation.controller.DepartmentController"
+            url-pattern="/ws/department" />
+
+    <endpoint
+            name="jobService"
+            implementation="com.soap_hrm.presentation.controller.JobController"
+            url-pattern="/ws/job" />
+
+    <endpoint
+            name="holidayService"
+            implementation="com.soap_hrm.presentation.controller.HolidayController"
+            url-pattern="/ws/holiday" />
 </endpoints>

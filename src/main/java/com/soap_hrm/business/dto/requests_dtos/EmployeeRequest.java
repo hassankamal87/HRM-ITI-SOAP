@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class EmployeeRequest {
     @Size(max = 60)
@@ -22,9 +21,9 @@ public class EmployeeRequest {
     private BigDecimal salary;
 
     @NotNull
-    private LocalDate hireDate;
+    private String hireDateStr;
     @NotNull
-    private LocalDate endDate;
+    private String endDateStr;
     @NotNull
     private int departmentID;
     @NotNull
@@ -36,13 +35,13 @@ public class EmployeeRequest {
     public EmployeeRequest() {
     }
 
-    public EmployeeRequest(String empName, String empEmail, int jobID, BigDecimal salary, LocalDate hireDate, LocalDate endDate, int departmentID, int addressID) {
+    public EmployeeRequest(String empName, String empEmail, int jobID, BigDecimal salary, String hireDate, String endDate, int departmentID, int addressID) {
         this.empName = empName;
         this.empEmail = empEmail;
         this.jobID = jobID;
         this.salary = salary;
-        this.hireDate = hireDate;
-        this.endDate = endDate;
+        this.hireDateStr = hireDate;
+        this.endDateStr = endDate;
         this.departmentID = departmentID;
         this.addressID = addressID;
     }
@@ -79,20 +78,20 @@ public class EmployeeRequest {
         this.salary = salary;
     }
 
-    public LocalDate getHireDate() {
-        return hireDate;
+    public String getHireDateStr() {
+        return hireDateStr;
     }
 
-    public void setHireDate(LocalDate hireDate) {
-        this.hireDate = hireDate;
+    public void setHireDateStr(String hireDateStr) {
+        this.hireDateStr = hireDateStr;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public String getEndDateStr() {
+        return endDateStr;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setEndDateStr(String endDateStr) {
+        this.endDateStr = endDateStr;
     }
 
     public int getDepartmentID() {
@@ -126,8 +125,8 @@ public class EmployeeRequest {
                 ", empEmail='" + empEmail + '\'' +
                 ", jobID=" + jobID +
                 ", salary=" + salary +
-                ", hireDate=" + hireDate +
-                ", endDate=" + endDate +
+                ", hireDate=" + hireDateStr +
+                ", endDate=" + endDateStr +
                 ", departmentID=" + departmentID +
                 ", addressID=" + addressID +
                 ", annualHolidays=" + annualHolidays +

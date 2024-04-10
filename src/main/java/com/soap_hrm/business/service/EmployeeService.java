@@ -7,9 +7,11 @@ import com.soap_hrm.persistence.connection.JPAManager;
 import com.soap_hrm.persistence.entities.*;
 import com.soap_hrm.persistence.repo.*;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -76,19 +78,26 @@ public class EmployeeService {
             if (address == null) {
                 return null;
             }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate hireDate = LocalDate.parse(employeeRequest.getHireDateStr(), formatter);
+            LocalDate endDate = LocalDate.parse(employeeRequest.getEndDateStr(), formatter);
             Employee newEmployee = new Employee();
             newEmployee.setEmpName(employeeRequest.getEmpName());
             newEmployee.setEmpEmail(employeeRequest.getEmpEmail());
-            newEmployee.setHireDate(employeeRequest.getHireDate());
-            newEmployee.setEndDate(employeeRequest.getEndDate());
+            newEmployee.setHireDate(hireDate);
+            newEmployee.setEndDate(endDate);
             newEmployee.setJob(job);
             newEmployee.setSalary(salary);
             newEmployee.setDepartment(department);
             newEmployee.setAddress(address);
             newEmployee.setAnnualHolidays(employeeRequest.getAnnualHolidays());
 
-            newEmployee = employeeRepo.save(newEmployee);
-            return EmployeeMapper.getInstance().mapEntityToDto(newEmployee, EmployeeDto.class);
+            try {
+                newEmployee = employeeRepo.save(newEmployee);
+                return EmployeeMapper.getInstance().mapEntityToDto(newEmployee, EmployeeDto.class);
+            }catch (PersistenceException e){
+                return null;
+            }
         }
 
     }
@@ -132,11 +141,11 @@ public class EmployeeService {
             return "salary is invalid";
         }
 
-        if (request.getHireDate() == null) {
+        if (request.getHireDateStr() == null) {
             return "HireDate  is invalid";
         }
 
-        if (request.getEndDate() == null) {
+        if (request.getEndDateStr() == null) {
             return "EndDate  is invalid";
         }
 
@@ -231,10 +240,11 @@ public class EmployeeService {
         return salary;
     }
 
-    public void deleteById(int id){
-        employeeRepo.deleteById(Employee.class,id);
+    public void deleteById(int id) {
+        employeeRepo.deleteById(Employee.class, id);
     }
-    public void deleteAllEmployees(){
+
+    public void deleteAllEmployees() {
         employeeRepo.deleteAll();
     }
 }

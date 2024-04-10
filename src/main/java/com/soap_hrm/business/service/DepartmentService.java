@@ -10,6 +10,7 @@ import com.soap_hrm.persistence.entities.*;
 import com.soap_hrm.persistence.repo.DepartmentRepo;
 import com.soap_hrm.persistence.repo.EmployeeRepo;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
 
 import java.util.List;
 
@@ -64,23 +65,26 @@ public class DepartmentService {
                 .toList();
     }
 
-    public String createDepartment(DepartmentRequest departmentRequest) {
+    public DepartmentDto createDepartment(DepartmentRequest departmentRequest) {
         String result = isDepartmentRequestValid(departmentRequest);
         if (!result.isEmpty()) {
-            return result;
+            return null;
         } else {
 
             Employee employee = new EmployeeRepo(em).findById(Employee.class, departmentRequest.getDepMGRId());
             if (employee == null) {
-                return "there is no Employee with this id";
+                return null;
             }
             Department department = new Department();
             department.setDepName(departmentRequest.getDepName());
             department.setDepMGR(employee);
-            departmentRepo.save(department);
+            try {
+                department = departmentRepo.save(department);
+                return DepartmentMapper.getInstance().mapEntityToDto(department, DepartmentDto.class);
+            } catch (PersistenceException e) {
+                return null;
+            }
         }
-
-        return "";
     }
 
     public DepartmentDto updateDepartmentName(int id, String name) {
@@ -116,12 +120,22 @@ public class DepartmentService {
         return result;
     }
 
-    public void deleteDepartmentById(int id) {
-        departmentRepo.deleteById(Department.class, id);
+    public boolean deleteDepartmentById(int id) {
+        try {
+            departmentRepo.deleteById(Department.class, id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public void deleteAllDepartments() {
-        departmentRepo.deleteAll();
+    public boolean deleteAllDepartments() {
+        try {
+            departmentRepo.deleteAll();
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
 }
